@@ -1,307 +1,314 @@
-\documentclass[10pt]{extarticle}
+\documentclass[10pt, a4paper]{extarticle}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% PACKAGES %
+% 1. PACKAGES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage{graphicx}       % Required for inserting images
-\usepackage{fontspec}       % custom font support
-\usepackage{href-ul}        % to insert links
-\usepackage[nomarginpar, margin=7mm]{geometry}
-\usepackage{tikz}           % draws polygons
-\usepackage{array}          % align text in tables
-\usepackage[dvipsnames]{xcolor} % color text
-\usepackage{titlesec}       % customize section titles
-\usepackage{fontawesome5}   % icons
-\usepackage{enumitem}       % customize lists
-\usepackage{paracol}        % two column layout
-\usepackage{varwidth}       % for varwidth environment
-\usepackage{eso-pic}        % for page backgrounds
+% Layout and Geometry
+\usepackage[nomarginpar, margin=10mm]{geometry} % Page margins
+\usepackage{paracol}        % Multi-column layout
+\usepackage{eso-pic}        % Background elements
+\usepackage{enumitem}       % Custom lists
+\usepackage{tabularx}       % Intelligent column widths (NEW)
+
+% Typography and Language
+\usepackage{fontspec}       % Custom fonts (Requires XeLaTeX or LuaLaTeX)
+\usepackage{titlesec}       % Custom section titles
+\usepackage[normalem]{ulem} % Underlining (for links)
+
+% Graphics and Colors
+\usepackage{graphicx}       % Images
+\usepackage{tikz}           % Drawing (shapes, backgrounds)
+\usepackage[dvipsnames]{xcolor} % Colors
+\usepackage{fontawesome5}   % Icons
+\usepackage{array}          % Table alignment
+
+% Interaction
+\usepackage[hidelinks]{hyperref} % Clickable links
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% STYLE %
+% 2. CONFIGURATION (FONTS & COLORS)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% fonts
-\setmainfont[Path= fonts/]{LatinaEssential-Medium.otf}
-\newfontfamily\mymedium[Path= fonts/]{LatinaEssential-Medium.otf}
-\newfontfamily\mymediumit[Path= fonts/]{LatinaEssential-MediumIt.otf}
-\newfontfamily\mybold[Path= fonts/]{LatinaEssential-Bold.otf}
-\newfontfamily\myboldit[Path= fonts/]{LatinaEssential-BoldIt.otf}
-\newfontfamily\myheavyit[Path= fonts/]{LatinaEssential-HeavyIt.otf}
-\newfontfamily\mylightit[Path= fonts/]{LatinaEssential-LightIt.otf}
 
-% sections
+% --- Variables ---
+\newcommand{\profilepic}{resources/sample.png} % Photo path
+
+% --- Colors ---
+\definecolor{accentcolor}{RGB}{93, 156, 236}      % Light blue
+\definecolor{textcolor}{RGB}{44, 62, 80}          % Dark gray
+\colorlet{periwinkle}{Periwinkle}                 % Main Accent
+\colorlet{sidebarbg}{Periwinkle!70}               % Sidebar background
+\colorlet{whitecanvas}{White!15}                  % Main content background
+
+% --- Fonts ---
+\setmainfont[Path=fonts/, UprightFont=*-Medium, ItalicFont=*-MediumIt, BoldFont=*-Bold, BoldItalicFont=*-BoldIt]{LatinaEssential}
+
+% Font Shortcuts
+\newcommand{\mymedium}{\normalfont}
+\newcommand{\mymediumit}{\itshape}
+\newcommand{\mybold}{\bfseries}
+\newcommand{\myboldit}{\bfseries\itshape}
+\newcommand{\myheavyit}{\fontspec[Path=fonts/]{LatinaEssential-HeavyIt.otf}}
+\newcommand{\mylightit}{\fontspec[Path=fonts/]{LatinaEssential-LightIt.otf}}
+
+% --- Section Styling ---
 \titleformat{\section}
-{\color{Periwinkle}\LARGE\myheavyit}
-{\thesection}{0pt}{}[\color{Periwinkle!70}\titlerule]
+  {\color{periwinkle}\LARGE\myheavyit}
+  {\thesection}{0pt}
+  {}[\color{periwinkle!70}\titlerule]
+
 \titlespacing{\section}{0pt}{8pt}{8pt}
 \setcounter{secnumdepth}{0}
 
-% document layout
+% Global Layout Settings
 \pagestyle{empty}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
-
-% list settings
-\setlist[itemize]{leftmargin=*, nosep, before=\vspace{2pt}, after=\vspace{2pt}}
-
-% paracol settings
-\setlength{\columnsep}{10mm}
-\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{17mm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% COLORS %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\definecolor{accentcolor}{RGB}{93, 156, 236}     % Light blue
-\definecolor{textcolor}{RGB}{44, 62, 80}         % Dark gray
-\definecolor{lightgray}{RGB}{236, 240, 241}      % Very light gray
-
-\definecolor{sidebarcolor}{RGB}{124,131,188}
-\definecolor{mygray}{gray}{0.6}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% MACROS %
+% 3. MACROS & COMMANDS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Labels
-\newcommand{\highlight}[3]{%
-    \tikz[baseline=(text.base)]{ \node[
-        rectangle,
-        rounded corners=14pt,
-        fill=#1,
-        text=#2,
-        inner sep=10pt,
-        outer sep=0pt,
-        text width=, 
-        align=left
-        ] (text) {%
-        \begin{varwidth}{\linewidth}
-            \large \mybold{#3}
-        \end{varwidth}
-        };
-    }%
-}
-% SECTION
-\newcommand{\mysection}[3]{
-    \section{#1}
-    \begin{table}[h!]
-        \begin{tabular}{#2}
-            #3
-        \end{tabular}
-    \end{table}
+% --- Helper: Custom Link Style (NEW) ---
+% Adds a small icon after the link
+\newcommand{\link}[2]{%
+    \href{#1}{#2\;{\footnotesize\faExternalLink*}}%
 }
 
-% ENTRY TITLE
-\newcommand{\myentrytitle}[1]{
-    \large{\textcolor{black}{\mybold{#1}}}
+% --- Helper: Custom List Separator (NEW) ---
+\newcommand{\listsep}{%
+    \hspace{4pt}\textcolor{White}{\textbf{|}}\hspace{4pt}%
 }
 
-% ELEMENTS
-\newcommand{\myentry}[5]{
-    % label
-    \highlight{Periwinkle!70}{white}{#1}& 
-        % Title
-        \myentrytitle{#2} 
-        
-        %sub 1
-        \normalsize\mymedium{\textcolor{Periwinkle}{#3}}
-        \vspace{1pt}
-        
-        %sub 2
-        \mymediumit \textcolor{black!70}{#4}
-        
-        %sub 3
-        \mymedium{#5}
-        \vspace{3pt}
+% --- Helper: Skill Progress Bar ---
+% Usage: \skillbar{Language}{Proficiency}{Level (0 to 5)}
+\newcommand{\skillbar}[3]{%
+    \textcolor{white}{\mybold{#1}} \textcolor{white}{-- \mymediumit{#2}}\\[2pt]
+    \begin{tikzpicture}
+        % Background empty bar (optional, uncomment if needed)
+        % \fill[white!30] (0,0) rectangle (5,0.15);
+        \fill[white] (0,0) rectangle (#3,0.15);
+    \end{tikzpicture}\\[4pt]
 }
 
-% Info item with icon
-\newcommand{\infoicon}[2]{%
+% --- Helper: Sidebar Contact Info ---
+\newcommand{\contactinfo}[3]{%
     \textcolor{white}{%
-        \faIcon{#1}\hspace{6pt}\parbox[t]{4.5cm}{\mymedium{#2}}\\[6pt]
+        \faIcon{#1}\hspace{6pt}\parbox[t]{4.5cm}{\mymedium{#2}}\\[#3]%
     }%
 }
+
+% --- Helper: Timeline Entry (Education/Work) ---
+% Usage: \timelineentry{Date}{Title}{Organization}{Description}{Details}
+\newcommand{\timelineentry}[5]{%
+    % Date Bubble
+    \tikz[baseline=(text.base)]{
+        \node[
+            rectangle,
+            rounded corners=14pt,
+            fill=periwinkle!70,
+            text=white,
+            inner sep=10pt,
+        ] (text) {\large\mybold{#1}};
+    } & 
+    % Content
+    \large{\textcolor{black}{\mybold{#2}}} \par
+    \normalsize\mymedium{\textcolor{periwinkle}{#3}} \par
+    \vspace{1pt}
+    \mymediumit \textcolor{black!70}{#4} \par
+    \mymedium{#5}
+    \vspace{6pt} \\
+}
+
+% --- Helper: Technical Skill Item ---
 \newcommand{\techskill}[2]{%
     \item \textcolor{black}{\mymediumit{#1}} \textcolor{black!90}{\mybold{({#2})}}
 }
 
+% --- Helper: Certification Entry ---
+\newcommand{\certentry}[4]{%
+    \large{\textcolor{black}{\mybold{#1}}} \par
+    \normalsize\mymedium{\textcolor{periwinkle}{#2}} \par
+    \vspace{1pt}
+    \mymediumit \textcolor{black!70}{#3} \par
+    \mymedium{#4}
+    \vspace{8pt}
+}
+
+% --- Background Generator ---
+\newcommand{\makebackground}{%
+    \AddToShipoutPictureBG*{%
+        \begin{tikzpicture}[remember picture,overlay]
+            % Sidebar Color
+            \node[
+                fill=sidebarbg,
+                minimum width=1\paperwidth,
+                minimum height=2\paperheight,
+            ] at ([yshift=0.05\paperheight]current page.south) {};
+            % Main Content White Rounded Box
+            \node[
+                fill=whitecanvas,
+                rounded corners=50pt,
+                minimum width=1.09\paperwidth,
+                minimum height=1.93\paperheight,
+            ] at ([yshift=0.1\paperheight,xshift=0.25\paperheight]current page.north) {};
+        \end{tikzpicture}%
+    }%
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% DOCUMENT %
+% 4. DOCUMENT BODY
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 
-\AddToShipoutPictureBG*{
-    \begin{tikzpicture}[remember picture,overlay]
-        \node[
-          fill=Periwinkle!70,
-          minimum width=1\paperwidth,
-          minimum height=2\paperheight,
-        ] at ([yshift=0.05\paperheight]current page.south) {};
-  \end{tikzpicture}%
-  \begin{tikzpicture}[remember picture,overlay]
-        \node[
-          fill=White!15,
-          rounded corners=50pt,
-          minimum width=1.01\paperwidth,
-          minimum height=2.05\paperheight,
-        ] at ([yshift=0.1\paperheight,xshift=0.25\paperheight]current page.north) {};
-  \end{tikzpicture}
-}
-% Set column ratio: left sidebar 30%, right content 70%
-\columnratio{0.31}
+\makebackground
+
+% Set column ratio: Left (Sidebar) 25%, Right (Content) 75%
+\columnratio{0.25}
+
 \begin{paracol}{2}
 
-% ===== LEFT COLUMN (SIDEBAR) =====%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\vspace{3mm}
+    % =========================================================================
+    % LEFT COLUMN (SIDEBAR)
+    % =========================================================================
+    \vspace{3mm}
 
-% Profile picture
-\begin{center}
-    \begin{tikzpicture}
-        \clip (0,0) circle (2.2cm);
-        \node at (0,0) {\includegraphics[width=4.5cm]{resources/sample.png}};
-    \end{tikzpicture}
-\end{center}
+    % --- Profile Picture ---
+    \begin{center}
+        \begin{tikzpicture}
+            \clip (0,0) circle (2.2cm);
+            % Using the variable defined at the top
+            \node at (0,0) {\includegraphics[width=4.5cm]{\profilepic}};
+        \end{tikzpicture}
+    \end{center}
 
-\vspace{8mm}
+    \vspace{8mm}
 
-% CONTACT INFO
-\section{\textcolor{white}{Personal Info}}
-\vspace{2mm}
-\textcolor{white}{
-    \faIcon{user}\hspace{6pt}\mybold{Edoardo Vassallo}\\[6pt]
-    \faIcon{birthday-cake}\hspace{6pt}\mymedium{03/06/2002}\\[6pt]
-    \faIcon{flag}\hspace{6pt}\mymedium{Italian}\\
-}
-
-\section{\textcolor{white}{Contact Info}}
+    % --- Personal Info ---
+    \section{\textcolor{white}{Personal Info}}
     \vspace{2mm}
-    \infoicon{phone}{+39 377 698 9383}
-    \infoicon{envelope}{edo.vas@protonmail.com}
-    \infoicon{map-marker-alt}{Via Bolzaneto 58/8 \newline \hspace{2mm} 16162, Genova, Italy}
-    \infoicon{linkedin}{\href{https://www.linkedin.com/in/inkeaton/?locale=en_US}{linkedin.com/in/inkeaton}}
-    \infoicon{github}{\href{https://github.com/inkeaton}{github.com/inkeaton}}
+    \textcolor{white}{
+        \faIcon{user}\hspace{6pt}\mybold{Edoardo Vassallo}\\[6pt]
+        \faIcon{mars}\hspace{6pt}\mybold{Male}\\[6pt]
+        \faIcon{birthday-cake}\hspace{6pt}\mybold{03/06/2002}\\[6pt]
+        \faIcon{flag}\hspace{6pt}\mybold{Italian}\\
+    }
+
+    % --- Contact Info ---
+    \section{\textcolor{white}{Contact Info}}
+    \vspace{2mm}
+    \contactinfo{phone}{+39 377 698 9383}{6pt}
+    \contactinfo{envelope}{edo.vas@protonmail.com}{6pt}
+    \contactinfo{map-marker-alt}{Via Bolzaneto 58/8 \newline \hspace{2mm} 16162, Genova, Italy}{6pt}
+    \contactinfo{linkedin}{\link{https://www.linkedin.com/in/inkeaton/?locale=en_US}{linkedin.com/in/inkeaton}}{6pt}
+    \contactinfo{github}{\link{https://github.com/inkeaton}{github.com/inkeaton}}{6pt}
+
+    % --- Languages ---
+    \section{\textcolor{white}{Languages}}
+    \vspace{2mm}
     
-% LANGUAGES
-% Option 1: Current style enhanced with proficiency bars
-\section{\textcolor{white}{Languages}}
-\vspace{2mm}
+    % (Language, Proficiency, Bar Width 0-5)
+    \skillbar{Italian}{Native}{5}
+    \skillbar{English}{C2 (Proficient)}{5}
 
-% Italian
-\textcolor{white}{\mybold{Italian}}  \textcolor{white}{ -- \mymediumit{Native}}\\[2pt]
-\begin{tikzpicture}
-    \fill[white] (0,0) rectangle (5,0.15);
-\end{tikzpicture}\\[2pt]
-
-% English
-\textcolor{white}{\mybold{English}} \textcolor{white}{-- \mymediumit{C2 (Proficient)}}\\[2pt]
-\begin{tikzpicture}
-    \fill[white] (0,0) rectangle (5,0.15);
-\end{tikzpicture}\\
-
-% Japanese
-\textcolor{white}{\mybold{Japanese}} \textcolor{white}{-- \mymediumit{No Knowledge}}\\[2pt]
-\begin{tikzpicture}
-    \fill[white] (0,0) rectangle (0.2,0.15);
-\end{tikzpicture}\\
-
-\section{\textcolor{white}{Interests}}
-
-\textcolor{white}{
-    \mybold Linguistics | Storytelling\\ History | Graphic Design \\ Drawing | Technology
-}
+    % --- Interests ---
+    \section{\textcolor{white}{Interests}}
+    \textcolor{white}{
+        % Using the new \listsep separator
+        \mybold Linguistics \listsep Storytelling\\ 
+        History \listsep Graphic Design \\ 
+        Drawing \listsep Technology
+    }
     
-\vspace{4mm}
+    \vspace{4mm}
 
-\switchcolumn
+    \switchcolumn
 
-% ===== RIGHT COLUMN (MAIN CONTENT) =====%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % =========================================================================
+    % RIGHT COLUMN (MAIN CONTENT)
+    % =========================================================================
 
-% NAME AND TITLE
-{\Huge\myheavyit{\textcolor{textcolor}{Edoardo Vassallo}}}\\[4pt]
-{\Large\myboldit{\textcolor{Periwinkle!70}{Computer Scientist}}}
+    % --- Name and Title ---
+    {\Huge\myheavyit{\textcolor{textcolor}{Edoardo Vassallo}}}\\[4pt]
+    {\Large\myboldit{\textcolor{periwinkle!70}{Computer Scientist}}}
 
-\vspace{3mm}
+    \vspace{3mm}
 
-% EDUCATION
-\mysection{Education}
-    {p{85pt}|p{270pt}}{
-    % MASTER
-    \myentry{2024-now}
-        {Master Degree in Computer Science \small \textcolor{black!45}{EQF 7}}
-        {\href{https://corsi.unige.it/en/corsi/11964}{\mymediumit{University of Genoa}}}
-        {In progress, began in September 2024}
-        {} \\ [20pt]
-    \myentry{2021-2024}
-        {Bachelor's Degree in Computer Science \small \textcolor{black!45}{EQF 6}}
-        {\href{https://corsi.unige.it/en/corsi/8759}{\mymediumit{University of Genoa}}}
-        {September 2021 - July 2024}
-        {Final Grade: \mybold 110 cum laude / 110 \newline  \mymedium Thesis:\mylightit Dangers of Self-Deleting JavaScript Code
-and Its Real World Usage}
-}
-
-% WORK EXPERIENCE
-\mysection{Work History}
-    {p{85pt}|p{250pt}}{
-    % MASTER
-   \myentry{2025-now}
-        {Academic Tutor}
-        {\href{https://corsi.unige.it/en/info/studenti-tutorato}{\mymediumit{University of Genoa}}}
-        {In progress, began in September 2025}
-        {}
-}
-
-\section{Technical Skills}
-\textcolor{black}
-\mymediumit
-\begin{itemize}
-    \techskill{Coding} {C, C++, C\#, Python, Java}
-    \techskill{Machine Learning}{Tensorflow, Keras, PyTorch}
-    \techskill{Databases}{SQL, PySpark} 
-    \techskill{Web Applications}{HTML, JS, PHP, CSS, D3JS}
-    \techskill{Agent Design}{Prolog, Jason} 
-    \techskill{High Performance Computing}{OpenMP, CUDA, MPI}
-    \techskill{Operating Systems}{Linux}
-    \techskill{Game Engines}{Unity, Godot}
-    \techskill{Markup}{\LaTeX}
-\end{itemize}
-
-% CERTIFICATIONS
-\section{Certifications}
-\vspace{1mm}
-\myentrytitle{Cambridge Proficiency Exam (CPE)} 
+    % --- Education ---
+    \section{Education}
+    \begin{tabularx}{\linewidth}{@{} p{0.22\linewidth} | X @{}}
+        \timelineentry{2024-now}
+            {Master Degree in Computer Science \small \textcolor{black!45}{EQF 7}}
+            {\link{https://corsi.unige.it/en/corsi/11964}{\mymediumit{University of Genoa}}}
+            {In progress, began in September 2024}
+            {} 
         
-%sub 1
-\normalsize\mymedium{\textcolor{Periwinkle}{{\href{https://www.cambridgeenglish.org/exams-and-tests/proficiency/}{\mymediumit{Cambridge University Press \& Assessment}}}}}
+        \timelineentry{2021-2024}
+            {Bachelor's Degree in Computer Science \small \textcolor{black!45}{EQF 6}}
+            {\link{https://corsi.unige.it/en/corsi/8759}{\mymediumit{University of Genoa}}}
+            {September 2021 - July 2024}
+            {Final Grade: \mybold 110 cum laude / 110 \newline  \mymedium Final Thesis:\mylightit Dangers of Self-Deleting JavaScript Code and Its Real World Usage}
+    \end{tabularx}
 
-%sub 2
-\mymediumit \textcolor{black!70}{Center: IT278 0004, Verification Number: D1401906}
-
-%sub 3
-\mymedium{Obtained on 17/05/2025, Grade: \mybold A\mymedium, Score: \mybold 222/230}
-\vspace{7pt}
-
-\myentrytitle{Open Badges} 
+    % --- Work History ---
+    \section{Work History}
+    \begin{tabularx}{\linewidth}{@{} p{0.22\linewidth} | X @{}}
+        \timelineentry{2025-now}
+            {Academic Tutor}
+            {\link{https://corsi.unige.it/en/info/studenti-tutorato}{\mymediumit{University of Genoa}}}
+            {In progress, began in September 2025}
+            {} 
         
-%sub 1
-\normalsize\mymedium{\textcolor{Periwinkle}{{\href{https://www.cambridgeenglish.org/exams-and-tests/proficiency/}{\mymediumit{University of Genoa}}}}}
+        \timelineentry{2022-2023}
+            {IT Technical Support}
+            {\mymediumit Local Restaurant "Pizzeria Snoopy"}
+            {September 2022 - January 2023}
+            {} 
+    \end{tabularx}
 
-%sub 2
-\mymediumit \textcolor{black!70}{Accessible at the following links:}
+    % --- Technical Skills ---
+    \section{Technical Skills}
+    \textcolor{black}{
+        \mymediumit
+        \begin{itemize}[leftmargin=*, nosep, before=\vspace{2pt}, after=\vspace{2pt}]
+            \techskill{Coding} {C, C++, C\#, Python, Java}
+            \techskill{Machine Learning}{Tensorflow, Keras, PyTorch}
+            \techskill{Databases}{SQL, PySpark} 
+            \techskill{Web Applications}{HTML, JS, PHP, CSS, D3JS}
+            \techskill{Agent Design}{Prolog, AgentSpeak} 
+            \techskill{High Performance Computing}{OpenMP, CUDA, MPI}
+            \techskill{Operating Systems}{Linux}
+            \techskill{Game Engines}{Unity, Godot}
+            \techskill{Software Development}{Git, UML}
+            \techskill{Markup}{\LaTeX, Markdown}
+        \end{itemize}
+    }
 
-\mybold
-%sub 3
-\begin{itemize}
-    \item \mybold \textcolor{Periwinkle}{\href{https://app.myopenbadge.com/receive/QoCpALI-45dfd4b54a4ce736260a2c9566c333ed-qkvDcQfo-91695553091/QYBhUrGjJ-c07cf9bd07f39b26a7dfcd8d965a1dc1-OYpbiaCIe5-2/public}{Social Competence Advanced Level}}
-    \item \textcolor{Periwinkle}{\href{https://app.myopenbadge.com/receive/QoCpALI-45dfd4b54a4ce736260a2c9566c333ed-qkvDcQfo-91695553091/KWOnxu-4879c0ee98f4184e51e0e69d6933c1aa-mi3EKHrI6-6/public}{Literacy Competence Advanced Level}}
-    \item \textcolor{Periwinkle}{\href{https://app.myopenbadge.com/receive/QoCpALI-45dfd4b54a4ce736260a2c9566c333ed-qkvDcQfo-91695553091/CvxjDygeiF-0b5c86e74411b2c95dcb367af7879b6a-kGuDt7-2/public}{Learning to Learn Competence Advanced Level}}
-\end{itemize}
+    % --- Certifications ---
+    \section{Certifications}
+    \vspace{2mm}
+
+    \certentry{Cambridge English Proficiency Exam (CPE) \small \textcolor{black!45}{CEFR C2}}
+        {\mymediumit\link{https://www.cambridgeenglish.org/exams-and-tests/proficiency/}{Cambridge University Press \& Assessment}}
+        {Center: IT278 0004, Verification Number: D1401906}
+        {Obtained on 17/05/2025, Grade: \mybold A\mymedium, Score: \mybold 222/230}
+
+    \certentry{European Computer Driving Licence (ECDL)}
+        {\mymediumit\link{https://www.ecdlonline.it/patente-europea}{Associazione Italiana per l'Informatica ed il Calcolo Automatico (AICA)}}
+        {Full Standard, Skillcard N°: IT 2393875}
+        {Obtained on 28/05/2019}
+
 \end{paracol}
 
-% Footer (below columns)
+% =========================================================================
+% FOOTER
+% =========================================================================
 \vfill
-\textcolor{white}{\small\mymedium{%
-    \hfill Written and Rendered in \href{https://github.com/inkeaton/CurriculumVitae}{\LaTeX} \\
-    Underlined text contains \href{https://en.wikipedia.org/wiki/Hyperlink}{links} \hfill Fonts used belong to the \href{https://www.behance.net/gallery/51912641/Latina-Essential-Free?tracking_source=search_projects|latina+essential&l=1\#}{Latina Essential Family}
+\textcolor{white}{\mymedium{%
+    \hfill Written and rendered in \link{https://github.com/inkeaton/CurriculumVitae}{\LaTeX} \\
+    Text with the following icon contains \link{https://en.wikipedia.org/wiki/Hyperlink}{links} \hfill Fonts used belong to the \link{https://www.behance.net/gallery/51912641/Latina-Essential-Free?tracking_source=search_projects|latina+essential&l=1\#}{Latina Essential Family}
 }}
 
 \end{document}
